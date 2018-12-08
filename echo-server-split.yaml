@@ -1,0 +1,33 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Configuration
+metadata:
+  name: echo-server
+  namespace: default
+spec:
+  revisionTemplate:
+    metadata:
+      labels:
+        knative.dev/type: container
+    spec:
+      # container:
+      #   image: terachanple/echo-server-go:latest
+      #   imagePullPolicy: Always
+
+      container:
+        image: terachanple/echo-server-go:feature_a
+        imagePullPolicy: Always
+---
+apiVersion: serving.knative.dev/v1alpha1
+kind: Route
+metadata:
+  name: echo-server
+  namespace: default
+spec:
+  traffic:
+  - revisionName: echo-server-00001
+    percent: 90
+    name: "v1"
+
+  - revisionName: echo-server-00002
+    percent: 10
+    name: "v2"
